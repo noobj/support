@@ -211,12 +211,19 @@ class Str
      * @param  string  $value
      * @param  int     $limit
      * @param  string  $end
+     * @param  bool    $clean
      * @return string
      */
-    public static function limit($value, $limit = 100, $end = '...')
+    public static function limit($value, $limit = 100, $end = '...', $clean = 0)
     {
         if (mb_strwidth($value, 'UTF-8') <= $limit) {
             return $value;
+        }
+
+        if ($clean) {
+            $trimStr = rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8'));
+
+            return tidy_repair_string($trimStr).$end;
         }
 
         return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')).$end;
